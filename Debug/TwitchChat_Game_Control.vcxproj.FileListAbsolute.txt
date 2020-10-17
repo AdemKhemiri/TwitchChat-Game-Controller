@@ -1,0 +1,2 @@
+C:\Users\Adam\source\repos\TwitchChat_Game_Control\Debug\TwitchChat_Game_Control.exe
+C:\Users\Adam\source\repos\TwitchChat_Game_Control\Debug\TwitchChat_Game_Control.pdb
