@@ -1,0 +1,7 @@
+﻿  main.cpp
+  TwitchSocket.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 896 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  TwitchChat_Game_Control.vcxproj -> C:\Users\Adam\source\repos\TwitchChat_Game_Control\TwitchChat-Game-Controller\Game Controller\Release\TwitchChat_Game_Control.exe

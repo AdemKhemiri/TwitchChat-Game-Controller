@@ -12,15 +12,12 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Winmm.lib")
 
-void dxKeyPressed(const char&);
-void keyboardPressed(const char& key);
-
 void gameControl(std::string&);
+
+void dxKeyPressed(const char&);
 void lockBall();
-void jumpPressed();
-void boostPressed();
-void dxBoost();
-void dxJump();
+void dxLeftMouse();
+void dxRightMouse();
 
 int main()
 {
@@ -102,7 +99,6 @@ void gameControl(std::string& msg)
 	{
 		//keyboardPressed('z');
 		dxKeyPressed('z');
-		//std::cout << "Z SHOULD BE PRESSEDDDDDDDDDDDDDDDD" << std::endl;
 	}
 	if (msg == "down")
 	{
@@ -126,52 +122,28 @@ void gameControl(std::string& msg)
 	if (msg == "jump")
 	{
 		//dxKeyPressed('k');
-		dxJump();
+		dxRightMouse();
 	}
 	if (msg == "boost")
 	{
 		//dxKeyPressed('j');
-		dxBoost();
+		dxLeftMouse();
 	}
 }
-void keyboardPressed(const char& key)
-{
-	INPUT input = { 0 };
-	input.type = INPUT_KEYBOARD;
-	input.ki.wVk = VkKeyScanA(key);
-	SendInput(1, &input, sizeof(input));
-	ZeroMemory(&input, sizeof(input));
-	input.ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(1, &input, sizeof(input));
-}
+
 void lockBall()
 {
+	SHORT key;
+	UINT mappedkey;
 	INPUT input = { 0 };
+	key = VkKeyScan(VK_SPACE);
+	mappedkey = MapVirtualKey(LOBYTE(key), 0);
 	input.type = INPUT_KEYBOARD;
-	input.ki.wVk = VkKeyScanA(VK_SPACE);
+	input.ki.dwFlags = KEYEVENTF_SCANCODE;
+	input.ki.wScan = mappedkey;
 	SendInput(1, &input, sizeof(input));
-	ZeroMemory(&input, sizeof(input));
-	input.ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(1, &input, sizeof(input));
-}
-void jumpPressed()
-{
-	INPUT input = { 0 };
-	input.type = INPUT_KEYBOARD;
-	input.ki.wVk = VkKeyScanA(VK_RBUTTON);
-	SendInput(1, &input, sizeof(input));
-	ZeroMemory(&input, sizeof(input));
-	input.ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(1, &input, sizeof(input));
-}
-void boostPressed()
-{
-	INPUT input = { 0 };
-	input.type = INPUT_KEYBOARD;
-	input.ki.wVk = VkKeyScanA(VK_LBUTTON);
-	SendInput(1, &input, sizeof(input));
-	ZeroMemory(&input, sizeof(input));
-	input.ki.dwFlags = KEYEVENTF_KEYUP;
+	Sleep(200);
+	input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
 	SendInput(1, &input, sizeof(input));
 }
 
@@ -190,33 +162,23 @@ void dxKeyPressed(const char& c)
 	input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
 	SendInput(1, &input, sizeof(input));
 }
-void dxBoost()
+void dxLeftMouse()
 {
-	SHORT key;
-	UINT mappedkey;
 	INPUT input = { 0 };
-	key = VkKeyScan(VK_LBUTTON);
-	mappedkey = MapVirtualKey(LOBYTE(key), 0);
 	input.type = INPUT_MOUSE;
-	input.ki.dwFlags = KEYEVENTF_SCANCODE;
-	input.ki.wScan = mappedkey;
+	input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
 	SendInput(1, &input, sizeof(input));
 	Sleep(100);
-	input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+	input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
 	SendInput(1, &input, sizeof(input));
 }
-void dxJump()
+void dxRightMouse()
 {
-	SHORT key;
-	UINT mappedkey;
 	INPUT input = { 0 };
-	key = VkKeyScan(VK_RBUTTON);
-	mappedkey = MapVirtualKey(LOBYTE(key), 0);
 	input.type = INPUT_MOUSE;
-	input.ki.dwFlags = KEYEVENTF_SCANCODE;
-	input.ki.wScan = mappedkey;
+	input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
 	SendInput(1, &input, sizeof(input));
 	Sleep(100);
-	input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
+	input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
 	SendInput(1, &input, sizeof(input));
 }
