@@ -7,21 +7,22 @@
 #include <vector>
 #include <regex>
 
+#include <KeyboardInput.h> 
+
 #include "TwitchSocket.h"
+
 
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Winmm.lib")
 
-void gameControl(std::string&);
+void rocketLeagueControl(std::string&);
 
-void dxKeyPressed(const char&);
-void lockBall();
-void dxLeftMouse();
-void dxRightMouse();
+
+tobInput::KeyboardInput keyboard;
+tobInput::MouseInput mouse;
 
 int main()
 {
-
 	WSADATA wsaData;
 	SOCKET Socket = INVALID_SOCKET;
 	struct addrinfo hints {};  /// COULD REMOVE THE STRUCT
@@ -72,14 +73,14 @@ int main()
 	twitch.send("PASS " + OAuthToken + "\r\n");
 	twitch.send("NICK adam79_kh\r\n"); //// ADD THE CHANNELNAME IN LOWER CASE
 
-	(void)twitch.receive();
+	//(void)twitch.receive();
 	//std::cout << twitch.receive() << std::endl;
 	twitch.send("JOIN #adam79_kh\r\n");
 
 	// Parse message
 	std::regex re("!(.+)@.+ PRIVMSG #([^\\s]+) :(.*)");
 	std::smatch match;
-	while (true)
+	while (!GetAsyncKeyState(VkKeyScanA('b'))&&!GetAsyncKeyState(VkKeyScan(VK_LCONTROL)))
 	{
 		Sleep(500);
 		std::string reply = twitch.receive();
@@ -87,98 +88,43 @@ int main()
 		std::string userName = match[1];
 		std::string msg = match[3];
 		std::cout << "message: " << msg << std::endl;
-		gameControl(msg);	////////// GAME CONTROLLER ///////////
+		rocketLeagueControl(msg);	////////// GAME CONTROLLER ///////////
 
 
 	}
 	return 0;
 }
-void gameControl(std::string& msg)
+void rocketLeagueControl(std::string& msg)
 {
 	if (msg == "up")
 	{
-		//keyboardPressed('z');
-		dxKeyPressed('z');
+		keyboard.Press('z');
+		
 	}
 	if (msg == "down")
 	{
-		//keyboardPressed('s');
-		dxKeyPressed('s');
+		keyboard.Press('s');
 	}
 	if (msg == "left")
 	{
-		dxKeyPressed('z');
-		dxKeyPressed('q');
+		keyboard.Press('z');
+		keyboard.Press('q');
 	}
 	if (msg == "right")
 	{
-		dxKeyPressed('z');
-		dxKeyPressed('d');
+		keyboard.Press('z');
+		keyboard.Press('d');
 	}
 	if (msg == "ball")
 	{
-		lockBall();
+		keyboard.VKPress(VK_SPACE);
 	}
 	if (msg == "jump")
 	{
-		//dxKeyPressed('k');
-		dxRightMouse();
+		mouse.RMouseClick();
 	}
 	if (msg == "boost")
 	{
-		//dxKeyPressed('j');
-		dxLeftMouse();
+		mouse.LMouseClick();
 	}
-}
-
-void lockBall()
-{
-	SHORT key;
-	UINT mappedkey;
-	INPUT input = { 0 };
-	key = VkKeyScan(VK_SPACE);
-	mappedkey = MapVirtualKey(LOBYTE(key), 0);
-	input.type = INPUT_KEYBOARD;
-	input.ki.dwFlags = KEYEVENTF_SCANCODE;
-	input.ki.wScan = mappedkey;
-	SendInput(1, &input, sizeof(input));
-	Sleep(200);
-	input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-	SendInput(1, &input, sizeof(input));
-}
-
-void dxKeyPressed(const char& c)
-{
-	SHORT key;
-	UINT mappedkey;
-	INPUT input = { 0 };
-	key = VkKeyScan(c);
-	mappedkey = MapVirtualKey(LOBYTE(key), 0);
-	input.type = INPUT_KEYBOARD;
-	input.ki.dwFlags = KEYEVENTF_SCANCODE;
-	input.ki.wScan = mappedkey;
-	SendInput(1, &input, sizeof(input));
-	Sleep(200);
-	input.ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP;
-	SendInput(1, &input, sizeof(input));
-}
-void dxLeftMouse()
-{
-	INPUT input = { 0 };
-	input.type = INPUT_MOUSE;
-	input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-	SendInput(1, &input, sizeof(input));
-	Sleep(100);
-	input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
-	SendInput(1, &input, sizeof(input));
-}
-void dxRightMouse()
-{
-	INPUT input = { 0 };
-	input.type = INPUT_MOUSE;
-	input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-	SendInput(1, &input, sizeof(input));
-	Sleep(100);
-	input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
-	SendInput(1, &input, sizeof(input));
 }
