@@ -1,8 +1,0 @@
-﻿  main.cpp
-  TwitchSocket.cpp
-  Generating code
-  2 of 896 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  TwitchChat_Game_Control.vcxproj -> C:\Users\Adam\source\repos\TwitchChat_Game_Control\TwitchChat-Game-Controller\Game Controller\Release\TwitchChat_Game_Control.exe
